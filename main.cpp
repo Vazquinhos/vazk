@@ -86,17 +86,22 @@ public:
   virtual ~RenderTaskFactory() = default;
 };
 
+
+
+#include <Timer.hpp>
+#include <Coroutine.hpp>
+#include <thread>
 int main()
 {
-  // Singleton
-  A& a = A::getInstance();
-  a.i = 0;
-  a.i++;
+  bool exit = false;
 
-  // Object Factory
-  static const std::string BeginTaskId("class BeginRenderTask");
-  std::shared_ptr< RenderTask > beginTask = RenderTaskFactory::getInstance().createObject(BeginTaskId);
-  beginTask->Execute();
-
-  return a.i;
+  Timer timer;
+  Coroutine::Wait(20.0f, [] {std::cout << "elapsed time 20 seconds";});
+  while (!exit)
+  {
+    std::this_thread::sleep_for(std::chrono::milliseconds(16));
+    timer.update();
+    Coroutine::update(timer.deltaTime());
+  }
+  return 0;
 }

@@ -1,9 +1,6 @@
-﻿Kernel Library
+﻿VazK
 -------------
 This is a base library to be used across multiple projects.
-
-[TOC]
-
 
 ### Singleton
 ```
@@ -105,6 +102,48 @@ int main()
   static const std::string BeginTaskId("class BeginRenderTask");
   std::shared_ptr< RenderTask > beginTask = RenderTaskFactory::getInstance().createObject(BeginTaskId);
   beginTask->Execute();
+  return 0;
+}
+```
+
+### Timer
+
+```
+#include <Timer.hpp>
+#include <thread>
+int main()
+{
+  bool exit = false;
+
+  Timer timer;
+  while (!exit)
+  {
+    std::this_thread::sleep_for(std::chrono::milliseconds(16));
+    timer.update();
+    std::cout << timer.deltaTime() << std::endl;
+  }
+  return 0;
+}
+```
+
+### Simple Coroutine
+
+```
+#include <Timer.hpp>
+#include <Coroutine.hpp>
+#include <thread>
+int main()
+{
+  bool exit = false;
+
+  Timer timer;
+  Coroutine::Wait(20.0f, [] {std::cout << "elapsed time 20 seconds";});
+  while (!exit)
+  {
+    std::this_thread::sleep_for(std::chrono::milliseconds(16));
+    timer.update();
+    Coroutine::update(timer.deltaTime());
+  }
   return 0;
 }
 ```
