@@ -86,22 +86,22 @@ public:
   virtual ~RenderTaskFactory() = default;
 };
 
-
-
-#include <Timer.hpp>
-#include <Coroutine.hpp>
-#include <thread>
+#include <Logger.hpp>
+#include <string>
 int main()
 {
-  bool exit = false;
 
-  Timer timer;
-  Coroutine::Wait(20.0f, [] {std::cout << "elapsed time 20 seconds";});
-  while (!exit)
-  {
-    std::this_thread::sleep_for(std::chrono::milliseconds(16));
-    timer.update();
-    Coroutine::update(timer.deltaTime());
-  }
+  Logger::BindOutputFunction
+  (
+    [](Logger::Severity _e, const std::string& _msg)
+    {
+      if (_e == Logger::Severity::eError)
+        std::cerr << _msg << std::endl;
+      else
+        std::cout << _msg << std::endl;
+    }
+  );
+
+  Log_Error("error!!!!!");
   return 0;
 }
